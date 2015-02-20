@@ -20,11 +20,9 @@ import static org.hamcrest.junit.MatcherAssert.assertThat;
  */
 public class StepsDefinition {
     WebDriver webDriver;
-    private String url = "https:\\gmail.com";
-//    private String login = "adfdesrfc";
-//    private String password = "aewdwed";
     LoginPage loginPage;
     MailboxPage mailboxPage;
+    private String url = "https:\\gmail.com";
     private String folderPath = "d:\\";
 
 
