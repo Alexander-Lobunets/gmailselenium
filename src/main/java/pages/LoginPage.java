@@ -1,4 +1,8 @@
-import helpers.HelperFields;
+package pages;
+
+import helpers.ElementsHelper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -8,7 +12,9 @@ import org.openqa.selenium.support.PageFactory;
  * Created by alobunets on 2/18/2015.
  */
 public class LoginPage {
+
     WebDriver webDriver;
+    private static final Logger logger = LogManager.getLogger(LoginPage.class);
 
     @FindBy (id = "Email")
     WebElement loginField;
@@ -19,19 +25,17 @@ public class LoginPage {
     @FindBy(id = "signIn")
     WebElement signInBtn;
 
-    LoginPage(WebDriver webDriver){
+    public LoginPage(WebDriver webDriver){
         this.webDriver = webDriver;
         PageFactory.initElements(webDriver, this);
     }
 
-    void login(String username, String password){
-        HelperFields.typeStringIntoField(loginField, username);
-        HelperFields.typeStringIntoField(passwdField, password);
-
-
+    public void login(String username, String password){
+        ElementsHelper.typeStringIntoField(loginField, username);
+        ElementsHelper.typeStringIntoField(passwdField, password);
     }
 
-    void pressLoginBtn(){
+    public void pressLoginBtn(){
         signInBtn.click();
     }
 

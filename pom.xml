@@ -13,6 +13,7 @@
         <cucumber.version>1.2.2</cucumber.version>
         <junit.version>4.11</junit.version>
         <harmcrest.version>1.0.0.0</harmcrest.version>
+        <log4j.version>2.1</log4j.version>
     </properties>
 
     <dependencies>
@@ -48,6 +49,16 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-junit</artifactId>
             <version>${harmcrest.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
         </dependency>
     </dependencies>
 </project>

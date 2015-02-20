@@ -4,7 +4,7 @@ Feature: gmail mailbox
     Given I open gmail.com page
     When I type <login> and <password>
       | login       | password       |
-      | <login>     | <login>        |
+      | afdqew    | ewdewd  |
     And I press login button
     Then I see gmail mailbox
     And I close browser
