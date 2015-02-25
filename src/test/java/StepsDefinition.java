@@ -60,7 +60,7 @@ public class StepsDefinition {
 
     @Then("^I close the browser$")
     public void i_close_the_browser() throws Throwable {
-
+        mailboxPage.logout();
         webDriver.close();
     }
 
