@@ -53,6 +53,10 @@ public class MailboxPage {
             )
     List<WebElement> myMail;
 
+    @FindBy(xpath = "//a[contains(@href,'logout')]")
+    WebElement btnLogout;
+
+
     public MailboxPage(WebDriver webDriver){
         this.webDriver = webDriver;
         PageFactory.initElements(webDriver, this);
@@ -102,6 +106,11 @@ public class MailboxPage {
         } else {
             return false;
         }
+    }
+
+
+    public void logout(){
+        btnLogout.click();
     }
 
 }
