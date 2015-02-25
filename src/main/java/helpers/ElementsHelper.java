@@ -16,13 +16,39 @@ public class ElementsHelper {
         webElement.sendKeys(text);
     }
 
-    public static WebElement  isElementPresence (WebDriver webDriver, WebElement webElement){
-        webElement = (new WebDriverWait(webDriver, 10))
+    public static WebElement  isElementClickable (WebDriver webDriver, WebElement webElement,
+                                                 int timeout){
+        webElement = (new WebDriverWait(webDriver, timeout))
                 .until(ExpectedConditions.elementToBeClickable(webElement));
         return webElement;
     }
 
 
+    public static String dynamicBulderLocator(String pattern, String str){
+        return pattern.replaceFirst("replace_me", str);
 
+    }
+
+
+
+
+
+//    public static WebElement  isElementPresence (WebDriver webDriver, WebElement webElement,
+//                                                  int timeout){
+//        try {
+//            webElement = (new WebDriverWait(webDriver, timeout))
+//                    .un(webElement.isEnabled());
+//            return webElement;
+//        } catch (NoSuchElementException e){
+//            throw e;
+//        }
+//    }
+
+//    public static WebElement isElementPresence (WebDriver webDriver, WebElement webElement,
+//                                                  int timeout) {
+//
+//          webElement.isDisplayed()
+//    }
+//}
 
 }
