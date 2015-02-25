@@ -4,12 +4,16 @@ package pages;
 import helpers.ElementsHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
 
 /**
  * Created by alobunets on 2/20/2015.
@@ -40,9 +44,14 @@ public class MailboxPage {
     @FindBy(xpath = "//div[contains(text(), 'Письмо отправлено')]")
     WebElement msgEmailSent;
 
-//    @FindBy(xpath = '//div[]')
-//    WebElement
+    @FindBy(xpath= "//a[contains(.,'Входящие')]")
+    WebElement linkInbox;
 
+//    @FindBys({@FindBy(xpath = "//div[contains(text(),'Непрочитанное письмо')]")})
+    @FindBys(
+            {@FindBy(xpath = "//tr[contains(.,'Непрочитанное письмо')]")}
+            )
+    List<WebElement> myMail;
 
     public MailboxPage(WebDriver webDriver){
         this.webDriver = webDriver;
@@ -50,26 +59,49 @@ public class MailboxPage {
     }
 
     public void clickButtonWrite(){
-        ElementsHelper.isElementPresence(webDriver, buttonWrite)
+        ElementsHelper.isElementClickable(webDriver, buttonWrite, 15)
                 .click();
     }
 
-    public void fillMailFieldsAndSend(){
+    public void fillMailFieldsAndSend(String to, String subject, String body){
         //wait for new mail div is clickable
         (new WebDriverWait(webDriver, 10))
                 .until(ExpectedConditions.elementToBeClickable(newMailDiv));
-
-        ElementsHelper.typeStringIntoField(fieldTo, "lobunets@gmail.com");
-        ElementsHelper.typeStringIntoField(fieldSubject, "test subject");
-        ElementsHelper.typeStringIntoField(fieldMailBodyText, "wedwedewd@DEWDW.COM");
+        ElementsHelper.typeStringIntoField(fieldTo, to);
+        ElementsHelper.typeStringIntoField(fieldSubject, subject);
+        ElementsHelper.typeStringIntoField(fieldMailBodyText, body);
         buttonSend.click();
     }
 
-    public void checkNewMail(){
-//        webDriver.navigate().refresh();
-        ElementsHelper.isElementPresence(webDriver, msgEmailSent);
+    public void refreshInbox() throws InterruptedException {
+        ElementsHelper.isElementClickable(webDriver, msgEmailSent, 20);
+        ElementsHelper.isElementClickable(webDriver, linkInbox, 20);
+        webDriver.navigate().refresh();
+        ElementsHelper.isElementClickable(webDriver, linkInbox, 30);
+        logger.debug("length:" + myMail.size() );
     }
 
+    public boolean checkMail(String sender, String subject, String bodyText){
+        int count = 0;
 
+        for(WebElement w: myMail){
+            logger.debug(w.getText());
+            if(w.findElement(By.xpath(ElementsHelper.dynamicBulderLocator("//span[@email='replace_me']", sender))) != null){
+                // if body mail ...
+                if(w.findElement(By.xpath(ElementsHelper.dynamicBulderLocator("//*[contains(.,'replace_me')]", bodyText))) != null){
+                    // if subject ...
+                    if(w.findElement(By.xpath(ElementsHelper.dynamicBulderLocator("//b[contains(.,'replace_me')]", subject))) != null){
+//                        w.click();
+                        count++;
+                    }
+                }
+            }
+        }
+        if (count > 0){
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 }

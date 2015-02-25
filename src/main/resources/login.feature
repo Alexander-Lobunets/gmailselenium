@@ -1,11 +1,10 @@
 Feature: gmail mailbox
 
   Scenario: send email via gmail
-    Given I open gmail.com page
-    When I type <login> and <password>
+    Given Login to Gmail with <login> and <password>
       | login       | password       |
-      | afdqew    | ewdewd  |
-    And I press login button
-    Then I see gmail mailbox
-    And I close browser
+      | any_login    | any_password  |
+    When I create mail to "me@gmail.com" with subject "test mail" and body "t_e_x_t" and send it
+    Then I see received mail from "me@gmail.com" with subject "test mail" and body "t_e_x_t" and make screenshot
+    And I close the browser
 

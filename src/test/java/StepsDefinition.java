@@ -5,11 +5,13 @@ import cucumber.api.java.en.When;
 import helpers.CommonHelpers;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import pages.LoginPage;
 import pages.MailboxPage;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.hamcrest.junit.MatcherAssert.assertThat;
@@ -26,45 +28,40 @@ public class StepsDefinition {
     private String folderPath = "d:\\";
 
 
-    @Given("^I open gmail\\.com page$")
-    public void i_open_gmail_com_page() throws Throwable {
-        webDriver = new FirefoxDriver();
+    @Given("^Login to Gmail with <login> and <password>$")
+    public void login_to_Gmail_with_login_and_password(DataTable dataTable) throws Throwable {
+        FirefoxProfile profile = new FirefoxProfile();
+        profile.setPreference("intl.accept_languages", "en-us, en");
+        webDriver = new FirefoxDriver(profile);
+
         webDriver.navigate().to(url);
         assertThat(webDriver.getTitle(), equalTo("Gmail"));
         loginPage = new LoginPage(webDriver);
-    }
-
-    @When("^I type <login> and <password>$")
-    public void i_type_and(DataTable dataTable) throws Throwable {
         List<List<String>> credentialsList = dataTable.raw();
         loginPage.login(credentialsList.get(1).get(0), credentialsList.get(1).get(1));
-    }
-
-    @When("^I press login button$")
-    public void i_press_login_button() throws Throwable {
         loginPage.pressLoginBtn();
     }
 
-    @Then("^I see gmail mailbox$")
-    public void i_see_gmail_mailbox() throws Throwable {
-        // wait for any element
+    @When("^I create mail to \"(.*?)\" with subject \"(.*?)\" and body \"(.*?)\" and send it$")
+    public void i_create_mail_to_with_subject_and_body_and_send_it(String to, String subject, String body) throws Throwable {
         mailboxPage = new MailboxPage(webDriver);
         mailboxPage.clickButtonWrite();
-        mailboxPage.fillMailFieldsAndSend();
+        mailboxPage.fillMailFieldsAndSend(to, subject, body);
         assertThat(webDriver.getCurrentUrl(), containsString("https://mail.google.com"));
-        mailboxPage.checkNewMail();
+    }
+
+    @Then("^I see received mail from \"(.*?)\" with subject \"(.*?)\" and body \"(.*?)\" and make screenshot$")
+    public void i_see_received_mail_from_with_subject_and_body_and_make_screenshot(String from, String subject, String body) throws Throwable {
+
+        mailboxPage.refreshInbox();
+        assertThat(true, is(mailboxPage.checkMail(from, subject, body)));
         CommonHelpers.getScreenshot(webDriver, folderPath + "gmail.png");
-
     }
 
-    @Then("^I close browser$")
-    public void i_close_browser() throws Throwable {
+    @Then("^I close the browser$")
+    public void i_close_the_browser() throws Throwable {
 
-    }
-
-
-    public WebDriver getWebdriver(){
-        return webDriver;
+        webDriver.close();
     }
 
 }
